@@ -9,14 +9,17 @@ public class PlayerController : MonoBehaviour
 {
 
     // Speed of the player movement
-    public float speed;
+    public float speed = 10f;
+    public float jumpForce = 7f;
 
     // Reference to the Rigidbody component
     private Rigidbody rb;
 
     // Movement input values
     private float movementX;
-    private float movementY;
+    private bool jumpPressed;
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,8 +37,11 @@ public class PlayerController : MonoBehaviour
 
         // Update movement input values
         movementX = movementVector.x;
-        movementY = movementVector.y;
-
+        
+        if (movementVector.y > 0.5f)
+        {
+            jumpPressed = true;
+        }
 
     }
 
@@ -46,12 +52,24 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // Create a movement vector based on input
-        Vector3 movement = new Vector3(movementX, movementY, 0.0f);
+        Vector3 movement = new Vector3(movementX, 0f, 0f);
 
         // Apply movement to the Rigidbody2D
         rb.AddForce(movement * speed);
 
+        if (jumpPressed)
+        {
+            Jump();
+            jumpPressed = false;
+        }
 
 
+
+    }
+
+    void Jump()
+    {
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 }

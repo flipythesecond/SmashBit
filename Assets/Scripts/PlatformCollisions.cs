@@ -11,7 +11,6 @@ public class PlatformCollision : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        platformCollider = GetComponent<BoxCollider>();
 
     }
 
@@ -25,6 +24,7 @@ public class PlatformCollision : MonoBehaviour
 
             // Get the player's Rigidbody component
             Rigidbody playerRb = collision.gameObject.GetComponent<Rigidbody>();
+            platformCollider = GetComponent<BoxCollider>();
 
             // Ignore collision if the player is moving upwards
             if (playerRb.linearVelocity.y > 0)
@@ -36,8 +36,11 @@ public class PlatformCollision : MonoBehaviour
 
     // Function to reenable collision when the player exits the platform
     private void OnCollisionExit(Collision collision)
-    { 
-        if( collision.gameObject.CompareTag("Player"))
+    {
+        Rigidbody playerRb = collision.gameObject.GetComponent<Rigidbody>();
+        platformCollider = GetComponent<BoxCollider>();
+
+        if ( collision.gameObject.CompareTag("Player"))
         {
             Physics.IgnoreCollision(collision.collider, platformCollider, false);
         }
