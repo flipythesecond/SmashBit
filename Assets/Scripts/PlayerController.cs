@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Unity.VisualScripting;
 using UnityEngine.Animations;
 
 public class PlayerController : MonoBehaviour
@@ -18,8 +15,10 @@ public class PlayerController : MonoBehaviour
     // Movement input values
     private float movementX;
     private bool jumpPressed;
+    private bool attackPressed;
 
-
+    public ParticleSystem jumpParticle;
+    public ParticleSystem attackParticle;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,7 +27,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
+    
     void OnMove(InputValue movementValue)
     {
 
@@ -45,7 +44,14 @@ public class PlayerController : MonoBehaviour
 
     }
 
-   
+
+    void OnAttack(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            attackPressed = true;
+        }
+    }
 
 
     // FixedUpdate is called once per fixed frame-rate
@@ -60,9 +66,15 @@ public class PlayerController : MonoBehaviour
         if (jumpPressed)
         {
             Jump();
+            JumpParticlePlay();
             jumpPressed = false;
         }
 
+        if (attackPressed)
+        {
+            AttackParticlePlay();
+            attackPressed = false;
+        }
 
 
     }
@@ -72,4 +84,24 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
+
+    void JumpParticlePlay()
+    {
+
+        jumpParticle.transform.position = transform.position;
+        jumpParticle.gameObject.SetActive(true);
+        jumpParticle.Play();
+    }
+    void AttackParticlePlay()
+    {
+        if (attackParticle == null) return;
+
+        // Offset: 0.5 right, 1.0 up
+        Vector3 attackOffset = new Vector3(0.5f, 1f, 0f);
+        attackParticle.transform.position = transform.position + attackOffset;
+
+        attackParticle.gameObject.SetActive(true);
+        attackParticle.Play();
+    }
 }
+

@@ -5,6 +5,7 @@ public class PlatformCollision : MonoBehaviour
 {
 
     // Reference to the platform's collider
+    public GameObject Player;
     private Collider platformCollider;
 
     
@@ -40,7 +41,7 @@ public class PlatformCollision : MonoBehaviour
         Rigidbody playerRb = collision.gameObject.GetComponent<Rigidbody>();
         platformCollider = GetComponent<BoxCollider>();
 
-        if ( collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             Physics.IgnoreCollision(collision.collider, platformCollider, false);
         }
