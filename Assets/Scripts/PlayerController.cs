@@ -1,18 +1,20 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Animations;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-
-    // Speed of the player movement
     public float speed = 10f;
     public float jumpForce = 7f;
 
-    // Reference to the Rigidbody component
+    public int maxHealth = 10;
+    public int currentHealth;
+    public Slider healthSlider;
+
+    private Animator anim;
     private Rigidbody rb;
 
-    // Movement input values
     private float movementX;
     private bool jumpPressed;
     private bool attackPressed;
@@ -20,30 +22,23 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem jumpParticle;
     public ParticleSystem attackParticle;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Get the Rigidbody2D component
         rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
+        currentHealth = maxHealth;
+        UpdateHealthSlider();
     }
-
-    
     void OnMove(InputValue movementValue)
     {
-
-        // Get movement input as a Vector2
         Vector2 movementVector = movementValue.Get<Vector2>();
-
-        // Update movement input values
         movementX = movementVector.x;
-        
+
         if (movementVector.y > 0.5f)
         {
             jumpPressed = true;
         }
-
     }
-
 
     void OnAttack(InputValue value)
     {
@@ -52,33 +47,55 @@ public class PlayerController : MonoBehaviour
             attackPressed = true;
         }
     }
+    void Update()
+    {
+        // Walking animation
+        if (anim != null)
+        {
+            bool isWalking = Mathf.Abs(movementX) > 0.01f;
+            anim.SetBool("isWalking", isWalking);
+        }
 
-
-    // FixedUpdate is called once per fixed frame-rate
+        // Flip player left/right
+        if (movementX > 0.01f)
+        {
+            transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+        else if (movementX < -0.01f)
+        {
+            transform.localScale = new Vector3(-1f, 1f, 1f);
+        }
+    }
     void FixedUpdate()
     {
-        // Create a movement vector based on input
         Vector3 movement = new Vector3(movementX, 0f, 0f);
-
-        // Apply movement to the Rigidbody2D
         rb.AddForce(movement * speed);
 
         if (jumpPressed)
         {
             Jump();
             JumpParticlePlay();
+
+            if (anim != null)
+            {
+                anim.SetTrigger("Jump");
+            }
+
             jumpPressed = false;
         }
 
         if (attackPressed)
         {
             AttackParticlePlay();
+
+            if (anim != null)
+            {
+                anim.SetTrigger("Attack");
+            }
+
             attackPressed = false;
         }
-
-
     }
-
     void Jump()
     {
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
@@ -87,6 +104,7 @@ public class PlayerController : MonoBehaviour
 
     void JumpParticlePlay()
     {
+        if (jumpParticle == null) return;
 
         jumpParticle.transform.position = transform.position;
         jumpParticle.gameObject.SetActive(true);
@@ -96,12 +114,61 @@ public class PlayerController : MonoBehaviour
     {
         if (attackParticle == null) return;
 
-        // Offset: 0.5 right, 1.0 up
-        Vector3 attackOffset = new Vector3(0.5f, 1f, 0f);
-        attackParticle.transform.position = transform.position + attackOffset;
+        Vector3 attackOffset;
 
+        // Put attack particle in front of the player based on facing direction
+        if (transform.localScale.x > 0)
+        {
+            attackOffset = new Vector3(0.5f, 1f, 0f);
+        }
+        else
+        {
+            attackOffset = new Vector3(-0.5f, 1f, 0f);
+        }
+
+        attackParticle.transform.position = transform.position + attackOffset;
         attackParticle.gameObject.SetActive(true);
         attackParticle.Play();
     }
-}
+    public void TakeDamage(int amount)
+    {
+        currentHealth -= amount;
 
+        if (currentHealth < 0)
+        {
+            currentHealth = 0;
+        }
+
+        UpdateHealthSlider();
+        Debug.Log("Player took damage. Current health: " + currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+    public void Heal(int amount)
+    {
+        currentHealth += amount;
+
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        UpdateHealthSlider();
+    }
+    void UpdateHealthSlider()
+    {
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = maxHealth;
+            healthSlider.value = currentHealth;
+        }
+    }
+    void Die()
+    {
+        Debug.Log("Player died");
+        gameObject.SetActive(false);
+    }
+}
