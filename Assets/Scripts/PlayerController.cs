@@ -5,44 +5,40 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
 
- 
+    // settings for player behavior
     public Transform enemy;
-   
 
+    // movement settings
     public float speed = 10f;
     public float jumpForce = 7f;
-
+    // cooldowns
     public float jumpCooldown = 0.5f;
     public float attackCooldown = 1.5f;
-
+    // health settings
     public float maxHealth = 100f;
     public float currentHealth;
     public Slider healthSlider;
-
+    // attack settings
     public float attackRange = 1.5f;
     public float attackDamage = 10f;
     public bool isAttacking = false;
-
-
-
+    // jump particle effect
     public ParticleSystem jumpParticle;
-
+    // audio sources
     public AudioSource audioMovement;
     public AudioSource audioJump;
     public AudioSource audioAttack;
-
+    // animator and rigidbody references
     private Animator anim;
     private Rigidbody rb;
-
+    // input variables
     private float movementX;
     private bool jumpPressed;
     private bool attackPressed;
     private bool isDead = false;
-
+    // timers for cooldowns
     private float lastJumpTime = 0f;
     private float lastAttackTime = 0f;
-
-   
     void Start()
     {
         // get components
@@ -104,12 +100,8 @@ public class PlayerController : MonoBehaviour
         //// apply movement force
         rb.AddForce(new Vector3(movementX, 0f, 0f) * speed);
 
-        //// apply movement
-        //rb.linearVelocity = new Vector3(
-        //    movementX * speed,
-        //    rb.linearVelocity.y,
-        //    0f
-        //);
+        //// apply movement (debug)
+        //rb.linearVelocity = new Vector3(movementX * speed, rb.linearVelocity.y, 0f);
 
         // handle jump with cooldown
         if (jumpPressed)
@@ -165,8 +157,9 @@ public class PlayerController : MonoBehaviour
         if (enemy == null)
             return;
 
+        // check distance to enemy
         float distance = Vector3.Distance(transform.position, enemy.position);
-
+        // if within attack range, deal damage and apply knockback
         if (distance <= attackRange)
         {
             EnemyBehaviour enemyHealth = enemy.GetComponent<EnemyBehaviour>();
@@ -228,6 +221,7 @@ public class PlayerController : MonoBehaviour
         
         GameManager.instance.PlayerWonRound();
 
+        // death logic (todo)
         //if (isDead) return;
 
         //isDead = true;
@@ -243,6 +237,7 @@ public class PlayerController : MonoBehaviour
         //    audioMovement.Stop();
     }
 
+    // called at the end of the death animation by an animation event
     //public void DeathAnimationEnd()
     //{
     //    if (GameManager.instance != null)

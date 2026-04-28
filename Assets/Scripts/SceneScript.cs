@@ -1,10 +1,30 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 public class SceneScript : MonoBehaviour
 {
 
-   
-   public void LoadScene()
+    public GameObject level;
+        
+    // show level
+    public void ShowLevel()
+    {
+        level.SetActive(true);
+    }
+
+    // hide level (optional)
+    public void HideLevel()
+    {
+        level.SetActive(false);
+    }
+
+   public void LoadLevel2()
+    {
+        SceneManager.LoadScene("Level2");
+    }
+
+    public void LoadLevel1()
     {
         SceneManager.LoadScene("MainGame");
     }
