@@ -1946,8 +1946,8 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.033333335
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 4b7eb42ceb0188043888e7cce318de99, type: 2}
-  m_BuildHeightMesh: 0
+  m_NavMeshData: {fileID: 23800000, guid: 6e847463cf4164e46aa42fa4c3eccf0f, type: 2}
+  m_BuildHeightMesh: 1
 --- !u!114 &950255880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2997,6 +2997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a792b948abb7244fb1034b4c489258d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneScript
+  level: {fileID: 0}
 --- !u!4 &1434312251
 Transform:
   m_ObjectHideFlags: 0

@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour
     void Die()
     {
         
-        GameManager.instance.PlayerWonRound();
+        GameManager.instance.EnemyWonRound();
 
         // death logic (todo)
         //if (isDead) return;

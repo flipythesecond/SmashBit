@@ -5,24 +5,25 @@ using UnityEngine.UI;
 
 public class EnemyBehaviour : MonoBehaviour
 {
+    // settings for enemy behavior
     public Transform player;
     public float detectRange = 10f;
     public float attackRange = 1.5f;
     public float attackCooldown = 1.5f;
     public float attackDamage = 10f;
-
+    // jump settings
     public float jumpForce = 7f;
     public float jumpCooldown = 3f;
     public float playerAboveAmount = 1f;
-
+    // health settings
     public float maxHealth = 100f;
     public float currentHealth;
     public Slider healthSlider;
 
+    // knockback settings
     public float knockBackForce = 4f;
     public float knockbackUpForce = 2f;
     public float knockbackDuration = 1f;
-
     public float attackDuration = 1.5f;
 
     // audio sources
@@ -30,16 +31,18 @@ public class EnemyBehaviour : MonoBehaviour
     public AudioSource audioJump;
     public AudioSource audioAttack;
 
+    // animator, navmesh agent, and rigidbody references
     private Animator anim;
     private NavMeshAgent agent;
     private Rigidbody rb;
 
+    // timers
     private float lastAttackTime;
     private float lastJumpTime;
-
+    // knockback
     private bool isKnockedBack;
     private float knockbackTimer;
-
+    // attack
     private bool isAttacking;
     private float attackTimer;
 
