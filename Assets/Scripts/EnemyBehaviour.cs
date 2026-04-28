@@ -139,11 +139,7 @@ public class EnemyBehaviour : MonoBehaviour
 
             Vector3 moveDir = agent.desiredVelocity.normalized;
 
-            rb.linearVelocity = new Vector3(
-                moveDir.x * agent.speed,
-                rb.linearVelocity.y,
-                0f
-            );
+            rb.linearVelocity = new Vector3(moveDir.x * agent.speed, rb.linearVelocity.y, 0f);
         }
         // attack player
         else if (distance <= attackRange)
@@ -200,10 +196,11 @@ public class EnemyBehaviour : MonoBehaviour
         Rigidbody playerRb = player.GetComponent<Rigidbody>();
         if (playerRb != null)
         {
+            // calculate knockback direction
             Vector3 dir = (player.position - transform.position).normalized;
 
-            playerRb.AddForce(
-                new Vector3(dir.x * knockBackForce, knockbackUpForce, 0f),ForceMode.Impulse);
+            // reset player vertical velocity before applying knockback
+            playerRb.AddForce(new Vector3(dir.x * knockBackForce, knockbackUpForce, 0f),ForceMode.Impulse);
         }
     }
 
@@ -250,11 +247,11 @@ public class EnemyBehaviour : MonoBehaviour
         GameManager.instance.PlayerWonRound();
     }
 
-    public void DeathAnimationEnd()
-    {
-        if (GameManager.instance != null)
-            GameManager.instance.EnemyWonRound();
-    }
+    //public void DeathAnimationEnd()
+    //{
+    //    if (GameManager.instance != null)
+    //        GameManager.instance.EnemyWonRound();
+    //}
     
 
     void OnTriggerEnter(Collider other)

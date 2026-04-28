@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
     // resets player and enemy positions and health for the next round
     void ResetRound()
     {
+        // find player and enemy objects in the scene
         PlayerController player = FindAnyObjectByType<PlayerController>();
         EnemyBehaviour enemy = FindAnyObjectByType<EnemyBehaviour>();
 

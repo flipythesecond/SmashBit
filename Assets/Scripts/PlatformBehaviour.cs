@@ -30,6 +30,7 @@ public class PlatformBehaviour : MonoBehaviour
             // move toward target x and y
             Vector3 pos = transform.position;
 
+            // move x and y independently so it can move diagonally
             pos.x = Mathf.MoveTowards(pos.x, targetX, moveSpeed * Time.deltaTime);
             pos.y = Mathf.MoveTowards(pos.y, targetY, moveSpeed * Time.deltaTime);
 
