@@ -1,52 +1,51 @@
-
 using UnityEngine;
 
 public class PlatformCollision : MonoBehaviour
 {
 
-    // Reference to the platform's collider
-    public GameObject Player;
+   
+    public Transform player;
+    public Transform player2;
+
     private Collider platformCollider;
 
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private Rigidbody playerRb;
+    private Rigidbody player2Rb;
+
+    private Collider playerCol;
+    private Collider player2Col;
+
+   
     void Start()
     {
-
-    }
-
-    // Function for platform collision handling
-    private void OnCollisionEnter(Collision collision)
-    {
-
-        // Check if the colliding object is the player
-        if (collision.gameObject.CompareTag("Player"))
-        {
-
-            // Get the player's Rigidbody component
-            Rigidbody playerRb = collision.gameObject.GetComponent<Rigidbody>();
-            platformCollider = GetComponent<BoxCollider>();
-
-            // Ignore collision if the player is moving upwards
-            if (playerRb.linearVelocity.y > 0)
-            {
-                Physics.IgnoreCollision(collision.collider, platformCollider, true);
-            }
-        }
-    }
-
-    // Function to reenable collision when the player exits the platform
-    private void OnCollisionExit(Collision collision)
-    {
-        Rigidbody playerRb = collision.gameObject.GetComponent<Rigidbody>();
         platformCollider = GetComponent<BoxCollider>();
 
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Physics.IgnoreCollision(collision.collider, platformCollider, false);
-        }
+        playerRb = player.GetComponent<Rigidbody>();
+        player2Rb = player2.GetComponent<Rigidbody>();
 
+        playerCol = player.GetComponent<Collider>();
+        player2Col = player2.GetComponent<Collider>();
     }
 
+    void Update()
+    {
+        HandlePlayer(player, playerRb, playerCol);
+        HandlePlayer(player2, player2Rb, player2Col);
+    }
 
+    void HandlePlayer(Transform p, Rigidbody rb, Collider col)
+    {
+        float playerY = p.position.y;
+        float platformY = transform.position.y;
+
+        // If below platform AND moving up ignore collision
+        if (playerY < platformY && rb.linearVelocity.y > 0.1f)
+        {
+            Physics.IgnoreCollision(platformCollider, col, true);
+        }
+        else
+        {
+            Physics.IgnoreCollision(platformCollider, col, false);
+        }
+    }
 }
